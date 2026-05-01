@@ -12,7 +12,9 @@ function assertEmailConfig() {
   const missing = requiredEmailEnv.filter((key) => !process.env[key]);
 
   if (missing.length > 0) {
-    throw new Error(`Missing email environment variables: ${missing.join(", ")}`);
+    throw new Error(
+      `Missing email environment variables: ${missing.join(", ")}`,
+    );
   }
 }
 
@@ -68,6 +70,24 @@ async function sendRegistrationEmail(userEmail, name) {
   return await sendEmail(userEmail, subject, text, html);
 }
 
+async function sendTransactionEmail(userEmail, name, amount, toAccount) {
+  const subject = "Transaction Alert from Bank Transaction System";
+  const text = `Hello ${name},\n\nA transaction of $${amount} has been made to account ${toAccount}. If you did not authorize this transaction, please contact us immediately.\n\nBest regards,\nBank Transaction System Team`;
+  const html = `<p>Hello ${name},</p><p>A transaction of <strong>$${amount}</strong> has been made to account <strong>${toAccount}</strong>. If you did not authorize this transaction, please contact us immediately.</p><p>Best regards,<br>Bank Transaction System Team</p>`;
+
+  return await sendEmail(userEmail, subject, text, html);
+}
+
+async function sendTransactionFailedEmail(userEmail, name, amount, toAccount) {
+  const subject = "Transaction Failed Alert from Bank Transaction System";
+  const text = `Hello ${name},\n\nA transaction of $${amount} to account ${toAccount} has failed. Please check your account balance and try again.\n\nBest regards,\nBank Transaction System Team`;
+  const html = `<p>Hello ${name},</p><p>A transaction of <strong>$${amount}</strong> to account <strong>${toAccount}</strong> has failed. Please check your account balance and try again.</p><p>Best regards,<br>Bank Transaction System Team</p>`;
+
+  return await sendEmail(userEmail, subject, text, html);
+}
+
 module.exports = {
   sendRegistrationEmail,
+  sendTransactionEmail,
+  sendTransactionFailedEmail,
 };

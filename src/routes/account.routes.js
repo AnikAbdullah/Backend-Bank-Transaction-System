@@ -11,4 +11,11 @@ router.post(
   accountController.createAccountController,
 );
 
+// GET /api/accounts
+router.get(
+  "/",
+  authMiddleware.authMiddleware,
+  accountController.getUserAccountsController,
+);
+
 module.exports = router;
